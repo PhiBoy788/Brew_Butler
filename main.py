@@ -64,6 +64,7 @@ class Tab1(ttk.Frame):
         btn = ttk.Button(self, text ="Log", command = self.log_pressed)
         btn.grid(column = 2, row = 2, padx = 30, pady = 30)
 
+    # SPEECH RECOGNITION FOR GOOGLE IS CURRENTLY BUGGED. ADDING LOGIC TO DISPLAY ERROR BUT WILL CHANGE WHEN GOOGLE FIXES THEIR ISSUE
     def get_command(self):
         helper.get_command()
 
@@ -134,7 +135,50 @@ class Tab2(ttk.Frame):
         calc_abv_btn = tk.Button(self, text = "Calculate", command = self.calculate_abv_pressed)
         calc_abv_btn.grid(column = 2, row = 0, padx = 30, pady = 0)
         
+        #These chunks of code outline the DME row
+        dme_mainframe = tk.Frame(self)
+        dme_mainframe.grid(column = 1, row = 1, padx = 0)
 
+        dme_labels = tk.Frame(dme_mainframe)
+        ttk.Label(dme_labels, text = "DME").pack(side = tk.LEFT, padx = 20)
+        ttk.Label(dme_labels, text = "LME").pack(side = tk.LEFT, padx = 40)
+        dme_labels.grid(column = 0, row = 0)
+
+        dme_frame = tk.Frame(dme_mainframe)
+        self.dme_dme = ttk.Entry(dme_frame, width = 5)
+        self.dme_dme.pack(side = tk.LEFT)
+        lbl = tk.Label(dme_frame, text = "lbs            ")
+        lbl.pack(side = tk.LEFT)
+        self.dme_lme = ttk.Entry(dme_frame, width = 5)
+        self.dme_lme.pack(side = tk.LEFT)
+        lbl = tk.Label(dme_frame, text = "lbs")
+        lbl.pack(side = tk.LEFT)
+        dme_frame.grid(column = 0, row = 1, padx = 30, pady = 5)
+        calc_dme_btn = tk.Button(self, text = "Calculate", command = self.calculate_dme_pressed)
+        calc_dme_btn.grid(column = 2, row = 1, padx = 30, pady = 0)
+
+
+        #These chunks of code outline the LME row
+        lme_mainframe = tk.Frame(self)
+        lme_mainframe.grid(column = 1, row = 2, padx = 0)
+
+        lme_labels = tk.Frame(lme_mainframe)
+        ttk.Label(lme_labels, text = "LME").pack(side = tk.LEFT, padx = 20)
+        ttk.Label(lme_labels, text = "DME").pack(side = tk.LEFT, padx = 40)
+        lme_labels.grid(column = 0, row = 0)
+
+        lme_frame = tk.Frame(lme_mainframe)
+        self.lme_dme = ttk.Entry(lme_frame, width = 5)
+        self.lme_dme.pack(side = tk.LEFT)
+        lbl = tk.Label(lme_frame, text = "lbs            ")
+        lbl.pack(side = tk.LEFT)
+        self.lme_lme = ttk.Entry(lme_frame, width = 5)
+        self.lme_lme.pack(side = tk.LEFT)
+        lbl = tk.Label(lme_frame, text = "lbs")
+        lbl.pack(side = tk.LEFT)
+        lme_frame.grid(column = 0, row = 2, padx = 30, pady = 5)
+        calc_lme_btn = tk.Button(self, text = "Calculate", command = self.calculate_lme_pressed)
+        calc_lme_btn.grid(column = 2, row = 2, padx = 30, pady = 0)                       
 
     #This checks that the user input info into both tabs properly
     def calculate_abv_pressed(self):
@@ -156,6 +200,34 @@ class Tab2(ttk.Frame):
         abv = abv + "%"
         print(abv)
         self.abv.insert(0, abv)
+        return
+    
+    def calculate_dme_pressed(self):
+        try:
+            dme = float(self.dme_dme.get())
+            self.dme_to_lme(dme)
+        except ValueError:
+            showerror("Error", "Please enter your DME in lbs in the left hand box")
+
+    def dme_to_lme(self, dme):
+        lme = dme * (43/36)
+        lme = float(round(lme, 2))
+        lme = str(lme)
+        self.dme_lme.insert(0, lme)
+        return
+
+    def calculate_lme_pressed(self):
+        try:
+            lme = float(self.lme_lme.get())
+            self.lme_to_lme(lme)
+        except ValueError:
+            showerror("Error", "Please enter your DME in lbs in the left hand box")
+
+    def lme_to_dme(self, lme):
+        dme = lme * (43/36)
+        dme = float(round(dme, 2))
+        dme = str(dme)
+        self.lme_dme.insert(0, dme)
         return
 
         
