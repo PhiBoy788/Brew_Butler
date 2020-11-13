@@ -48,13 +48,22 @@ def greeting():
 
 # prompts the user for a command and returns it as a string for the execute command function
 def get_command():
-    trys = 0
+    trys = 1
     try:
+        print("trying")
         with mic as source:
-            speak("What can I do for you?")
-            audio = r.listen(source)
-            command = r.recognize_google(audio)
-            print(command)
+            
+            while True:
+                try:
+                    speak("What can I do for you?")
+                    audio = r.listen(source)
+                    command = r.recognize_google(audio)
+                    print(command)
+                    execute_command(command)
+                    break
+                except:
+                    print("got the issue " + str(trys))
+                    trys += 1
             return command
     except:
         if trys == 3:
